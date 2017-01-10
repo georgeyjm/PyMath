@@ -1,5 +1,4 @@
 # A python program for generating the formula of a given sequence.
-# Doesn't work for simple sequences!
 # Requires SymPy
 
 import sympy
@@ -11,7 +10,7 @@ if not sequence:
     sequence = '1, 3, 5, 7, 217341'
 sequence = sequence.replace(' ','').split(',')
 
-COUNT = 5
+COUNT = len(sequence)
 
 allElements = []
 
