@@ -1,4 +1,5 @@
 # A python program for generating the formula of a given sequence.
+# Only works for polynomial formulas
 # Requires SymPy
 
 import sympy
