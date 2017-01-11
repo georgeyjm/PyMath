@@ -1,31 +1,31 @@
 # A python program for generating the formula of a given sequence.
 # Only works for polynomial formulas
-# Requires SymPy
+# Dependencies: SymPy
 
 import sympy
 from sympy.parsing.sympy_parser import parse_expr
 import itertools as it
 
-sequence = input('Enter the sequence: ')
-if not sequence:
-    sequence = '1, 3, 5, 7, 217341'
-sequence = sequence.replace(' ','').split(',')
+class Sequence(object):
+    '''A sequence object'''
 
-COUNT = len(sequence)
+    def __init__(self, sequence='1, 3, 5, 7, 217341'):
+        self._seq = sequence.replace(' ','').split(',')
+        self._seqLen = len(self._seq)
 
-allElements = []
+    def generateFormula(self):
+        '''Generates a formula for the sequence, returns a sympy object.\nOnly works for polynomial formulas.'''
+        tmp = []
+        combinations = [i for i in it.combinations([l+1 for l in range(self._seqLen)], self._seqLen-1)]
+        for combination, leftOut in zip(combinations, reversed([l+1 for l in range(self._seqLen)])):
+            numerator = sympy.expand(parse_expr('*'.join(['(n-{})'.format(element) for element in combination])))
+            denominator = parse_expr('*'.join(['({}-{})'.format(leftOut,element) for element in combination]))
+            tmp.append(numerator / denominator)
+        fractions = []
+        for sequenceItem, element in zip(reversed(self._seq), tmp):
+            fractions.append(parse_expr(sequenceItem) * element)
+        self.formula = sympy.expand(sum(fractions))
+        return self.formula
 
-combinations = [i for i in it.combinations([l+1 for l in range(COUNT)], COUNT-1)]
-for combination, leftOut in zip(combinations, reversed([l+1 for l in range(COUNT)])):
-    numerator = sympy.expand(parse_expr('*'.join(['(n-{})'.format(element) for element in combination]), evaluate=False))
-    denominator = parse_expr('*'.join(['({}-{})'.format(leftOut,element) for element in combination]), evaluate=False)
-    allElements.append(numerator / denominator)
-
-secondaryElements = []
-for sequenceItem, element in zip(reversed(sequence), allElements):
-    secondaryElements.append(parse_expr(sequenceItem) * element)
-    
-final = sympy.expand(sum(secondaryElements))
-
-print('An = ' + str(final))
-print('A_n = ' + sympy.latex(final))
+seq = Sequence(input('Input the sequence:'))
+print(seq.generateFormula())
