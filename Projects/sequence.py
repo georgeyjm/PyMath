@@ -41,7 +41,7 @@ class Sequence(object):
         return False, None
 
     def generateFormula(self):
-        '''Generates a formula for the sequence, returns a sympy object.\nOnly works for polynomial formulas.'''
+        '''Generates a formula for the sequence, returns a sympy object.\nMay not work for complex sequences.'''
         arithmetic, d = self._isArithmetic()
         if arithmetic:
             self.formula = sympy.nsimplify(parse_expr('{}*n + {}'.format(d, self._seq[0]-d)))
@@ -49,7 +49,7 @@ class Sequence(object):
         geometric, r = self._isGeometric()
         if geometric:
             log = math.log(self._seq[0], r)
-            if int(log) == log:
+            if log.is_integer():
                 self.formula = sympy.nsimplify(parse_expr('{}**(n-1+{})'.format(r, log)))
             else:
                 self.formula = sympy.nsimplify(parse_expr('{}**(n-1) * {}'.format(r, self._seq[0])))
