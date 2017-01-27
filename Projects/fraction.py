@@ -23,7 +23,7 @@ class Fraction(object):
         gcd = math.gcd(self._numer, self._denom)
         self._numer, self._denom = self._numer//gcd, self._denom//gcd
         if division and (self._numer / self._denom).is_integer():
-            return int(self._numer / self._denom)
+            return self._numer // self._denom
         return self._numer, self._denom
 
 #Example Usage:
