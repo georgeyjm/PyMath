@@ -88,7 +88,6 @@ radAddon = [i for i,j in radP.items() for k in range(j)]
 
 while True:
     mode = choice(MODES)
-    mode = 'radians'
     if mode == 'degrees':
         question = choice(specials) + choice(addon) * 90
         if random() < negP:
