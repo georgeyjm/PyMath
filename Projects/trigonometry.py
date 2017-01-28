@@ -31,6 +31,42 @@ def trig_val(func, param, mode='degrees'):
     except KeyError:
         raise ValueError('only accept special angle values')
 
+def parseAnswer(decimal):
+    val = '{:.5f}'.format(decimal)
+    sign = ''
+    if decimal < 0:
+        sign = '-'
+        val = val[1:]
+    if val == '0.00000':
+        return '0'
+    elif val == '1.00000':
+        return '{}1'.format(sign)
+    elif val == '0.50000':
+        return '{}1/2 = {}0.5'.format(sign,sign)
+    elif val == '0.70711':
+        return '{}√2/2 ≈ {}0.707'.format(sign,sign)
+    elif val == '0.86603':
+        return '{}√3/2 ≈ {}0.866'.format(sign,sign)
+    elif val == '0.57735':
+        return '{}√3/3 ≈ {}0.577'.format(sign,sign)
+    elif val == '1.73205':
+        return '{}√3 ≈ {}1.732'.format(sign,sign)
+    elif val == '0.25882':
+        return '{}(√6-√2)/4 ≈ {}0.259'.format(sign,sign)
+    elif val == '0.96593':
+        return '{}(√6+√2)/4 ≈ {}0.966'.format(sign,sign)
+    elif val == '0.26795':
+        if sign == '-':
+            return '-2+√3 ≈ -0.268'
+        else:
+            return '2-√3 ≈ 0.268'
+    elif val == '3.73205':
+        if sign == '-':
+            return '-2-√3 ≈ -3.732'
+        else:
+            return '2+√3 ≈ 3.732'
+    raise ValueError('invalid value to parse')
+
 DIFFICULTY = 1 # 1=Easy, 2=Hard
 MODES = ('degrees', 'radians')
 if DIFFICULTY == 1:
@@ -41,7 +77,7 @@ if DIFFICULTY == 1:
     radP = {0:20, 1:15, 2:10}
     negP = 0.3
 elif DIFFICULTY == 2:
-    speicals = (0,15,30,45,60,75,90)
+    specials = (0,15,30,45,60,75,90)
     specialRads = ([0,1],[1,12],[1,6],[1,4],[1,3],[5,12],[1,2],[7,12],[2,3],[3,4],[5,6],[11,12])
     FUNCTIONS = ('sin', 'cos', 'tan', 'cot')
     possibility = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1}
@@ -76,7 +112,7 @@ while True:
                     print('Correct!\n')
                     break
                 else:
-                    print('Incorrect!\nThe answer is: {}\n'.format(correct))
+                    print('Incorrect!\nThe answer is {}\n'.format(parseAnswer(correct)))
                     break
             else:
                 print('Cheater!\n')
@@ -92,16 +128,19 @@ while True:
                 continue
             break
         while True:
+            numer = '{}π'.format(qNum)
+            denom = '/{}'.format(qDen)
+            if abs(qNum) == 1:
+                if qNum == -1:
+                    numer = '-π'
+                else:
+                    numer = 'π'
+            if qDen == 1:
+                denom = ''
             if qNum == 0:
-                answer = input('{}(0) = '.format(function))
-            elif qNum == 1 and qDen != 1:
-                answer = input('{}(π/{}) = '.format(function, qDen))
-            elif qDen == 1 and qNum != 1:
-                answer = input('{}({}π) = '.format(function, qNum))
-            elif qNum == 1 and qDen == 1:
-                answer = input('{}(π) = '.format(function))
-            else:
-                answer = input('{}({}π/{}) = '.format(function, qNum, qDen))
+                numer = '0'
+                denom = ''
+            answer = input('{}({}{}) = '.format(function, numer, denom))
             if function not in answer and 'trig_val' not in answer:
                 try:
                     answerVal = eval(answer)
@@ -113,7 +152,7 @@ while True:
                     print('Correct!\n')
                     break
                 else:
-                    print('Incorrect!\nThe answer is: {}\n'.format(correct))
+                    print('Incorrect!\nThe answer is {}\n'.format(parseAnswer(correct)))
                     break
             else:
                 print('Cheater!\n')
